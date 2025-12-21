@@ -3,4 +3,6 @@
 __pycache__/
 .ipynb_checkpoints/
 code/summarization_agent/resources/
-Siemens_Assessment.pdf/
+
+code/summarization_agent/summarize_text_output.json
+Siemens_Assessment.pdf
