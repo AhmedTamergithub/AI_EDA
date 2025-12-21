@@ -1,0 +1,6 @@
+.venv/
+.env
+__pycache__/
+.ipynb_checkpoints/
+code/summarization_agent/resources/
+Siemens_Assessment.pdf/
