@@ -6,3 +6,6 @@ code/summarization_agent/resources/
 
 code/summarization_agent/summarize_text_output.json
 Siemens_Assessment.pdf
+code/summarization_agent/output/pdf_chunking_output.json
+code/summarization_agent/output/summarize_after_chunks.json
+code/summarization_agent/.adk/session.db

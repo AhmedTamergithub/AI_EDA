@@ -1,14 +1,15 @@
 import datetime
 from zoneinfo import ZoneInfo
 from google.adk.agents import Agent
-from prompt import system_prompt
+from .prompt import system_prompt
+from .tools import extract_pdf, detect_language, summarize_text, summarize_pdf
 
 root_agent = Agent(
     name="summarization_agent",
-    model="gemini-1.5-flash",
+    model="gemini-2.5-flash",
     description=(
-        "Agent that recieves a PDF as an input and extract text from it , then perform chunking and summarization for each chunk, and provide a combined summary for the pdf , also it detects the language of the PDF."
+        "AI Summarization agent that processes PDF documents by extracting text, performing semantic chunking using embeddings,summarizing each chunk individually, and generating a combined final summary. Also detects document language. "   
     ),
     instruction=system_prompt,
-    tools=[]
+    tools=[extract_pdf, detect_language, summarize_text, summarize_pdf]
 )  
