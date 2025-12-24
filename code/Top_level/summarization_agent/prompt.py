@@ -20,7 +20,7 @@ You are responsible for processing PDF documents by extracting text, chunking it
 **STRICT EXECUTION FLOW:**
 You MUST follow this exact sequence:
 
-1. Call summarize_pdf() with the PDF path: /home/ahmedubuntu/AI_EDA/code/summarization_agent/resources/Ahmed_Tamer_Samir_CV.pdf
+1. Call summarize_pdf() with the PDF path: /home/ahmedubuntu/AI_EDA/code/Top_level/summarization_agent/resources/Ahmed_Tamer_Samir_CV.pdf
 
 2. The summarize_pdf function will automatically:
    - Extract text from the PDF using extract_pdf()
