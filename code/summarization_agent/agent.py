@@ -4,7 +4,7 @@ from google.adk.agents import Agent
 from .prompt import system_prompt
 from .tools import extract_pdf, detect_language, summarize_text, summarize_pdf
 
-root_agent = Agent(
+summarization_agent = Agent(
     name="summarization_agent",
     model="gemini-2.5-flash",
     description=(
