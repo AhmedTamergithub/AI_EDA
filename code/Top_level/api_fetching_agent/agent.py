@@ -10,5 +10,6 @@ api_fetching_agent = Agent(
         "AI agent that fetches weather information and exchange rates using external APIs."   
     ),
     instruction=api_fetching_prompt,
-    tools=[fetch_weather, fetch_exchange_rate]
+    tools=[fetch_weather, fetch_exchange_rate],
+    output_key="api_results.json",
 )  

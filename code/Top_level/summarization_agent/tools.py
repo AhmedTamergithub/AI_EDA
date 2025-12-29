@@ -54,6 +54,21 @@ def extract_pdf(pdf_path: str) -> tuple[str, int]:
         if not extracted_text:
             raise ValueError(f"PDF has {num_pages} page(s) but no extractable text (might be scanned images, binary data, or images without OCR)")
         
+        # Save extracted data to JSON file for evaluation agent
+        output_dir = os.path.join(os.path.dirname(__file__), "output")
+        os.makedirs(output_dir, exist_ok=True)
+        
+        raw_data = {
+            "pdf_path": pdf_path,
+            "extracted_text": extracted_text,
+            "num_pages": num_pages,
+            "extraction_timestamp": time.strftime("%Y-%m-%d %H:%M:%S")
+        }
+        
+        output_path = os.path.join(output_dir, "raw_extracted_data.json")
+        with open(output_path, "w", encoding="utf-8") as f:
+            json.dump(raw_data, f, indent=2, ensure_ascii=False)
+        
         return extracted_text, num_pages #[Requirement 2]
     
     except FileNotFoundError:
@@ -158,7 +173,7 @@ def summarize_text(text: str, max_length: str = "medium") -> dict:
                 )
                 
                 summary = response.text.strip()
-                model_name = "gemini-2.5-flash"
+                model_name = "gemini-2.5-flash-lite"
                 break  # Success, exit retry loop
                 
             except Exception as e:
@@ -294,7 +309,7 @@ def summarize_pdf(pdf_path: str) -> dict:
         for i, chunk in enumerate(chunks, 1):
             print(f"\nSummarizing chunk {i}/{len(chunks)}...")
             try:
-                summary_result = summarize_text(chunk, max_length="short")
+                summary_result = summarize_text(chunk, max_length="medium")
                 chunk_summaries.append({
                     "chunk_number": i,
                     "chunk_length": len(chunk),

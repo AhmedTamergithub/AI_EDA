@@ -1,6 +1,20 @@
 
 ---
 
+## Prerequisites
+
+This project uses the Model Context Protocol (MCP) to interact with the filesystem. To run the MCP server, you must have **Node.js** and **npx** installed on your system.
+
+### Installation
+1. **Node.js & npm**: Download and install from [nodejs.org](https://nodejs.org/) or use a version manager like `nvm`.
+2. **Verify**:
+   ```bash
+   node -v
+   npx -v
+   ```
+
+---
+
 ## System Diagram
 
 ![System Diagram](images/System_diagram.png)

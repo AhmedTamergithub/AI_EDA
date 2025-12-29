@@ -22,7 +22,7 @@ if parent_dir not in sys.path:
 # Import the sub-agents
 from api_fetching_agent.agent import api_fetching_agent
 from summarization_agent.agent import summarization_agent
-
+from evaluation_agent.agent import evaluation_agent
 
 # Define the root agent instruction
 ROOT_AGENT_INSTRUCTION = """
@@ -33,12 +33,14 @@ Your role is to analyze user requests and delegate them to the appropriate speci
 **Delegation Rules:**
 - For weather queries or currency exchange rates → Delegate to 'api_fetching_agent'
 - For PDF document processing, summarization, or language detection → Delegate to 'summarization_agent'
+- For evaluating agent outputs, quality checks, or validation → Delegate to 'evaluation_agent'
 
 **When to Delegate:**
 - If the user asks about weather in any city → transfer to api_fetching_agent
 - If the user asks about exchange rates or currency conversion → transfer to api_fetching_agent
 - If the user asks to summarize a PDF or document → transfer to summarization_agent
 - If the user asks about document language detection → transfer to summarization_agent
+- If the user asks to evaluate, validate, or check quality of outputs → transfer to evaluation_agent
 
 **Important:**
 - Analyze the user's intent carefully before delegating
@@ -52,9 +54,9 @@ Your role is to analyze user requests and delegate them to the appropriate speci
 root_orchestrator = Agent(
     name="RootOrchestrator",
     model="gemini-2.5-flash",
-    description="Main coordinator that routes requests to specialized agents for weather/API data or PDF summarization tasks.",
+    description="Main coordinator that routes requests to specialized agents for weather/API data, PDF summarization, or quality evaluation tasks.",
     instruction=ROOT_AGENT_INSTRUCTION,
-    sub_agents=[api_fetching_agent, summarization_agent]  # LLM-Driven Delegation
+    sub_agents=[api_fetching_agent, summarization_agent, evaluation_agent]  # LLM-Driven Delegation
 )
 
 
