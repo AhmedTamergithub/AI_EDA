@@ -5,6 +5,8 @@ import os
 from dotenv import load_dotenv
 import json
 import time
+import requests
+import tempfile
 from langchain_experimental.text_splitter import SemanticChunker
 from langchain_huggingface import HuggingFaceEmbeddings
 
@@ -15,24 +17,39 @@ load_dotenv()
 DetectorFactory.seed = 0
 
 
-def extract_pdf(pdf_path: str) -> tuple[str, int]:
+def extract_pdf_text(pdf_path: str) -> tuple[str, int]:
     """
     Extract text content from a PDF file using PyMuPDF.
     
     Args:
-        pdf_path (str): Path to the PDF file
+        pdf_path (str): Path to the PDF file or HTTP URL
         
     Returns:
         tuple[str, int]: A tuple containing (extracted_text, num_pages)
         
     Raises:
-        FileNotFoundError: If the PDF file doesn't exist
-        ValueError: If PDF is empty or corrupted
-        Exception: For other PDF processing errors
+        FileNotFoundError: If the local PDF file doesn't exist
+        ValueError: If PDF is empty or has no extractable text
+        Exception: If PDF download from URL fails (e.g., network error, 404) or extraction fails
     """
+    temp_file_path = None
     try:
+        # Handle HTTP URL [Requirement: Accepts local path and HTTP URL]
+        if pdf_path.startswith(("http://", "https://")):
+            print(f"Downloading PDF from URL: {pdf_path}")
+            response = requests.get(pdf_path, timeout=30)
+            response.raise_for_status()
+            
+            # Create a temporary file to store the downloaded PDF
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_file:
+                temp_file.write(response.content)
+                temp_file_path = temp_file.name
+            actual_path = temp_file_path
+        else:
+            actual_path = pdf_path
+
         # Open the PDF file
-        doc = fitz.open(pdf_path)
+        doc = fitz.open(actual_path)
         num_pages = len(doc)
         
         # Check if PDF is empty (0 pages) [Requirement 4]
@@ -48,6 +65,10 @@ def extract_pdf(pdf_path: str) -> tuple[str, int]:
         
         # Close the document
         doc.close()
+        
+        # Clean up temp file if it was created
+        if temp_file_path and os.path.exists(temp_file_path):
+            os.unlink(temp_file_path)
         
         # Check if PDF has no extractable text (images, scanned without OCR, binary data) [Requirement 3]
         extracted_text = text.strip()
@@ -71,11 +92,22 @@ def extract_pdf(pdf_path: str) -> tuple[str, int]:
         
         return extracted_text, num_pages #[Requirement 2]
     
+    except requests.exceptions.RequestException as e:
+        if temp_file_path and os.path.exists(temp_file_path):
+            os.unlink(temp_file_path)
+        raise Exception(f"Error downloading PDF from URL: {str(e)}")
     except FileNotFoundError:
+        if temp_file_path and os.path.exists(temp_file_path):
+            os.unlink(temp_file_path)
         raise FileNotFoundError(f"PDF file not found: {pdf_path}")
     except ValueError:
+        if temp_file_path and os.path.exists(temp_file_path):
+            os.unlink(temp_file_path)
         raise
     except Exception as e:
+        # Clean up temp file on error
+        if temp_file_path and os.path.exists(temp_file_path):
+            os.unlink(temp_file_path)
         raise Exception(f"Error extracting PDF (possibly corrupted or unreadable): {str(e)}")
 
 
@@ -235,7 +267,7 @@ def summarize_pdf(pdf_path: str) -> dict:
         
         # Step 1: Extract text from PDF
         print(f"Extracting text from PDF: {pdf_path}")
-        extracted_text, num_pages = extract_pdf(pdf_path)
+        extracted_text, num_pages = extract_pdf_text(pdf_path)
         print(f"✓ Extracted {len(extracted_text)} characters from {num_pages} pages")
         
         # Step 2: Detect language
@@ -316,6 +348,8 @@ def summarize_pdf(pdf_path: str) -> dict:
                     "summary": summary_result["summary"],
                     "summary_length": summary_result["metadata"]["summary_length"]
                 })
+                # Bonus: Stream partial results
+                print(json.dumps({"chunk": i, "partial_summary": summary_result["summary"]}))
                 print(f"✓ Chunk {i} summarized: {len(chunk)} chars → {len(summary_result['summary'])} chars")
             except Exception as e:
                 print(f"✗ Error summarizing chunk {i}: {str(e)}")
@@ -337,6 +371,8 @@ def summarize_pdf(pdf_path: str) -> dict:
         try:
             combined_summary_result = summarize_text(all_summaries_text, max_length="short")
             combined_summary = combined_summary_result["summary"]
+            # Bonus: Stream final result
+            print(json.dumps({"final_summary": combined_summary}))
             print(f"✓ Combined summary created: {len(combined_summary)} characters")
         except Exception as e:
             print(f"✗ Error creating combined summary: {str(e)}")
@@ -377,23 +413,3 @@ def summarize_pdf(pdf_path: str) -> dict:
         raise Exception(f"Error in summarize_pdf: {str(e)}")
 
 
-# if __name__ == "__main__":
-#     # Set your PDF path here
-#     pdf_path = "/home/ahmedubuntu/AI_EDA/code/summarization_agent/resources/Ahmed_Tamer_Samir_CV.pdf"
-    
-#     try:
-#         # Test the summarize_pdf function with semantic chunking
-#         result = summarize_pdf(pdf_path)
-        
-#         # Save results to JSON
-#         output_file = "output/pdf_chunking_output.json"
-#         # Don't save the full chunks to keep the file manageable, just the metadata
-#         save_result = {k: v for k, v in result.items() if k != 'chunks'}
-        
-#         with open(output_file, 'w', encoding='utf-8') as f:
-#             json.dump(save_result, f, indent=2, ensure_ascii=False)
-        
-#         print(f"\n✓ Results saved to: {output_file}")
-        
-#     except Exception as e:
-#         print(f"Error: {e}")

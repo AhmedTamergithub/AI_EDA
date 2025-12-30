@@ -13,7 +13,7 @@ EVALUATION_SERVER_PATH = "/home/ahmedubuntu/AI_EDA/task2/evaluation_server.py"
 
 
 
-root_agent = LlmAgent(
+multi_tool_mcp_agent = LlmAgent(
     model='gemini-2.5-flash',
     name='multi_tool_mcp_agent',
     instruction="""You are a helpful assistant with access to tools from THREE MCP servers:

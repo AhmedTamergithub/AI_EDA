@@ -11,7 +11,7 @@ The root agent uses LLM-Driven Delegation (transfer_to_agent) to hand off contro
 
 import sys
 import os
-from google.adk.agents import Agent
+from google.adk.agents import Agent,SequentialAgent
 
 # Add parent directory to path to import sibling modules
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -54,11 +54,15 @@ Your role is to analyze user requests and delegate them to the appropriate speci
 root_orchestrator = Agent(
     name="RootOrchestrator",
     model="gemini-2.5-flash",
-    description="Main coordinator that routes requests to specialized agents for weather/API data, PDF summarization, or quality evaluation tasks.",
+    description="Main coordinator that routes requests to specialized agents for weather/API data, PDF summarization tasks.",
     instruction=ROOT_AGENT_INSTRUCTION,
-    sub_agents=[api_fetching_agent, summarization_agent, evaluation_agent]  # LLM-Driven Delegation
+    sub_agents=[api_fetching_agent, summarization_agent]  # LLM-Driven Delegation
+)
+final_evaluator_agent= SequentialAgent(
+    name="final_evaluator_agent",
+    description="Complete AI EDA pipeline that orchestrates task execution through specialized agents and ensures output integrity via automated evaluation.",
+    sub_agents=[root_orchestrator, evaluation_agent]
 )
 
-
 # Export the root orchestrator
-root_agent = root_orchestrator
+root_agent = final_evaluator_agent
