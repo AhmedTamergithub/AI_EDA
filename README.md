@@ -1,88 +1,24 @@
+# AI EDA Project
+
+## Tasks Block Diagrams
+
+### Task 1: Multi-Agent Orchestration
+![Task 1 System Diagram](images/task1_system_diagram.png)
+
+For Task 1, we developed a modular multi-agent system where each specific responsibility is handled by a dedicated agent. This architecture ensures clear separation of concerns:
+- **Modular Design**: Each agent (API Fetching, Summarization, and Evaluation) is equipped with its own set of specialized **tools** and a dedicated **prompt file** for precise behavioral control.
+- **Framework**: The system is built using the **Google-adk** framework, leveraging its capabilities for robust agent management and tool integration.
 
 ---
 
-## Prerequisites
+### Task 2: MCP-Based Architecture
+![Task 2 System Diagram](images/task2_system_diagram.png)
 
-This project uses the Model Context Protocol (MCP) to interact with the filesystem. To run the MCP server, you must have **Node.js** and **npx** installed on your system.
+Task 2 transitions the system to a Model Context Protocol (MCP) architecture, enhancing scalability and interoperability:
+- **MCP Client**: A single agent acts as the MCP client, orchestrating requests across the environment.
+- **MCP Servers**: Three distinct servers provide specialized services:
+    1. **API Fetching Server**
+    2. **Summarization Server**
+    3. **Evaluation Server**
 
-### Installation
-1. **Node.js & npm**: Download and install from [nodejs.org](https://nodejs.org/) or use a version manager like `nvm`.
-2. **Verify**:
-   ```bash
-   node -v
-   npx -v
-   ```
-
----
-
-## System Diagram
-
-![System Diagram](images/System_diagram.png)
-
----
-
-## Overview: LLM Tool Calling vs No Tool Calling
-
-![LLM Tool Calling vs No Tool Calling](images/LLM_toolcalling_vs_notoolcalling.png)
-
----
-## 1️⃣ LLM **without tool calling**
-
-* It **only generates text** based on the prompt.
-* Example: you ask, *“What’s the current temperature in Paris?”*
-
-  * LLM will **guess or hallucinate** a number.
-  * It has **no way to indicate structured tool calls**, no awareness of external functions.
-* Output is purely **unstructured natural language**.
-
-**Example:**
-
-```
-User: What's the temperature in Paris?
-LLM: It's about 25 degrees Celsius.  # Could be wrong, no function executed
-```
-
----
-
-## 2️⃣ LLM **with tool calling**
-
-* LLM can **output structured instructions** that represent “tool calls” (functions it *wants* to invoke).
-* Example: it produces a JSON describing which tool to call and with what arguments:
-
-```json
-{
-  "name": "get_current_temperature",
-  "arguments": {"location": "Paris, France", "unit": "celsius"}
-}
-```
-
-* Your program (or an agent) reads this, executes the tool, and feeds the result back.
-* This allows LLMs to **interact with external systems** in a safe, controlled way.
-
-**Example flow:**
-
-```
-1️⃣ LLM: {"name": "get_current_temperature", "arguments": {...}}
-2️⃣ Your code: executes get_current_temperature()
-3️⃣ Result: 22.0
-4️⃣ LLM: "The current temperature in Paris is 22°C."
-```
-
----
-
-### 🔹 Key difference
-
-| Feature                             | No Tool Calling | Tool Calling                           |
-| ----------------------------------- | --------------- | -------------------------------------- |
-| Structured function output          | ❌               | ✅                                      |
-| Access to external APIs / functions | ❌               | ✅ (via orchestrator)                   |
-| Accuracy for real-world data        | ❌ hallucinates  | ✅ can return actual data               |
-| Interaction format                  | Text only       | JSON / tool calls / structured outputs |
-
----
-
-### One-line takeaway
-
-> **Tool calling doesn’t let the LLM execute functions by itself** — it just lets the LLM **plan and suggest structured calls** to external systems -
-
----
+> **Note on Evaluation Logic**: The Evaluation Server is exclusively responsible for assessing the **summarization output**. We have omitted automated evaluation for the API fetching stage because the fetching server interacts directly with the ground truth (real API data). Evaluating the raw fetching output against itself would be redundant, as the server's primary role is to provide the factual data used in subsequent steps.
