@@ -14,9 +14,9 @@ EVALUATION_SERVER_PATH = os.path.join(script_dir, "evaluation_server.py")
 
 
 
-multi_tool_mcp_agent = LlmAgent(
+mcp_agent = LlmAgent(
     model='gemini-2.5-flash',
-    name='multi_tool_mcp_agent',
+    name='mcp_agent',
     instruction=task2_system_prompt,
     tools=[
         # Server 1: Summarization Server
@@ -57,4 +57,4 @@ multi_tool_mcp_agent = LlmAgent(
 )
 
 
-root_agent = multi_tool_mcp_agent
+

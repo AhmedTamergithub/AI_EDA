@@ -13,4 +13,3 @@ summarization_agent = Agent(
     instruction=system_prompt,
     tools=[extract_pdf_text, detect_language, summarize_text, summarize_pdf]
 )  
-#root_agent = summarization_agent
