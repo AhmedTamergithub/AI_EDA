@@ -39,3 +39,18 @@ The system consists of several specialized agents:
         - [Imagepdfonly.pdf](code/task1/summarization_agent/resources/Imagepdfonly.pdf)
         - [emptypdf.pdf](code/task1/summarization_agent/resources/emptypdf.pdf)
         - [zero_pages.pdf](code/task1/summarization_agent/resources/zero_pages.pdf)
+
+## How to Run
+
+### Running the Whole Task 1 System
+1. Go to configure tool choose orchestrator
+2. Navigate to directory `code/task1`
+3. Run `adk web` (if port 8000 was used before run `adk web --port 8001` or any other port)
+4. Click on link
+5. Start chatting with agent in adk web UI
+
+### Running a Specialized Agent
+1. Run `configure_root.py` choose `api_fetching` or `summarization`
+2. Navigate to `code/task1`
+3. Run `adk web` in terminal
+4. Start chatting with the specialized agent in adk web UI
