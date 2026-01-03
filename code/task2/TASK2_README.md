@@ -42,6 +42,15 @@ The system is built around a central MCP Client that orchestrates requests acros
 - [system_prompt.py](code/task2/system_prompt.py) - System instructions for the MCP agent.
 - **output/** - Directory will be created in runtime for storing execution results and logs.
 
+## Key Features
+
+- **Decoupled Architecture**: Servers can be scaled or updated independently of the client.
+- **Standardized Protocol**: Uses MCP for consistent tool discovery and execution.
+- **Bonus: Streaming Support**:
+    - **Stderr Passthrough**: The MCP servers use `sys.stderr` to stream real-time progress and word-by-word summaries back to the client's terminal.
+    - **Real-time Feedback**: Users can see the summary being generated in real-time, even though the final tool result is returned as a complete JSON object.
+    - **Progress Tracking**: Detailed logs of PDF extraction, chunking, and individual chunk summarization are streamed to the terminal.
+
 ## How to Run Task 2
 
 

@@ -36,6 +36,10 @@ The system consists of several specialized agents:
     - Sequential agent for summarization agent then evaluation agent.
     - Sequential agent for api fetching agent then evaluation agent.
 
+-   **Bonus: Streaming Support**: The summarization agent supports real-time terminal streaming for long-running tasks.
+    - **Word-by-Word Output**: The `summarize_text` tool uses Gemini's `generate_content_stream` to print the summary word-by-word as it is generated, providing immediate feedback in the terminal.
+    - **Progress Updates**: The `summarize_pdf` tool provides real-time status updates (e.g., "Extracting text...", "Chunking document...") to keep the user informed during the multi-step process.
+   
 
 
 ## Directory Structure
