@@ -36,7 +36,7 @@ def extract_pdf_text(pdf_path: str) -> tuple[str, int]:
     try:
         # Handle HTTP URL [Requirement: Accepts local path and HTTP URL]
         if pdf_path.startswith(("http://", "https://")):
-            print(f"Downloading PDF from URL: {pdf_path}")
+            print(f"Downloading PDF from URL: {pdf_path}", flush=True)
             response = requests.get(pdf_path, timeout=30)
             response.raise_for_status()
             
@@ -195,7 +195,8 @@ def summarize_text(text: str, max_length: str = "medium") -> dict:
         
         for attempt in range(max_retries):
             try:
-                response = client.models.generate_content(
+                # Use generate_content_stream for real-time terminal output
+                response = client.models.generate_content_stream(
                     model='gemini-2.5-flash-lite',
                     contents=user_prompt,
                     config={
@@ -204,7 +205,15 @@ def summarize_text(text: str, max_length: str = "medium") -> dict:
                     }
                 )
                 
-                summary = response.text.strip()
+                summary_parts = []
+                for chunk in response:
+                    if chunk.text:
+                        print(chunk.text, end="", flush=True)
+                        summary_parts.append(chunk.text)
+                        #time.sleep(1) 
+                
+                print()  # New line after streaming is complete
+                summary = "".join(summary_parts).strip()
                 model_name = "gemini-2.5-flash-lite"
                 break  # Success, exit retry loop
                 
@@ -212,7 +221,7 @@ def summarize_text(text: str, max_length: str = "medium") -> dict:
                 if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
                     if attempt < max_retries - 1:
                         wait_time = retry_delay * (2 ** attempt)  # Exponential backoff
-                        print(f"Rate limit hit. Waiting {wait_time} seconds before retry {attempt + 2}/{max_retries}...")
+                        print(f"Rate limit hit. Waiting {wait_time} seconds before retry {attempt + 2}/{max_retries}...", flush=True)
                         time.sleep(wait_time)
                     else:
                         raise  # Max retries reached
@@ -266,17 +275,17 @@ def summarize_pdf(pdf_path: str) -> dict:
         os.makedirs(output_dir, exist_ok=True)
         
         # Step 1: Extract text from PDF
-        print(f"Extracting text from PDF: {pdf_path}")
+        print(f"Extracting text from PDF: {pdf_path}", flush=True)
         extracted_text, num_pages = extract_pdf_text(pdf_path)
-        print(f"✓ Extracted {len(extracted_text)} characters from {num_pages} pages")
+        print(f"✓ Extracted {len(extracted_text)} characters from {num_pages} pages", flush=True)
         
         # Step 2: Detect language
         language = detect_language(extracted_text)
-        print(f"✓ Detected language: {language}")
+        print(f"✓ Detected language: {language}", flush=True)
         
         # Step 3: Perform semantic chunking using embeddings (FREE HuggingFace model)
-        print(f"\nPerforming semantic chunking with embeddings...")
-        print("Loading embedding model (this may take a moment on first run)...")
+        print(f"\nPerforming semantic chunking with embeddings...", flush=True)
+        print("Loading embedding model (this may take a moment on first run)...", flush=True)
         
         # Use free HuggingFace embeddings model
         embeddings = HuggingFaceEmbeddings(
@@ -320,26 +329,17 @@ def summarize_pdf(pdf_path: str) -> dict:
         with open(chunking_output_file, 'w', encoding='utf-8') as f:
             json.dump(result, f, indent=2, ensure_ascii=False)
         
-        print(f"✓ Created {len(chunks)} semantic chunks")
-        print(f"✓ Chunking output saved to: {chunking_output_file}")
-        print(f"\n{'='*80}")
-        print("CHUNKING RESULTS")
-        print(f"{'='*80}")
-        for i, chunk in enumerate(chunks, 1):
-            print(f"\n{'='*80}")
-            print(f"CHUNK {i}: {len(chunk)} characters")
-            print(f"{'='*80}")
-            print(chunk)
-            print(f"{'='*80}")
+        print(f"✓ Created {len(chunks)} semantic chunks", flush=True)
+        print(f"✓ Chunking output saved to: {chunking_output_file}", flush=True)
         
         # Step 5: Summarize each chunk
-        print(f"\n{'='*80}")
-        print("SUMMARIZING CHUNKS")
-        print(f"{'='*80}")
+        print(f"\n{'='*80}", flush=True)
+        print("SUMMARIZING CHUNKS", flush=True)
+        print(f"{'='*80}", flush=True)
         
         chunk_summaries = []
         for i, chunk in enumerate(chunks, 1):
-            print(f"\nSummarizing chunk {i}/{len(chunks)}...")
+            print(f"\nSummarizing chunk {i}/{len(chunks)}...", flush=True)
             try:
                 summary_result = summarize_text(chunk, max_length="medium")
                 chunk_summaries.append({
@@ -348,11 +348,11 @@ def summarize_pdf(pdf_path: str) -> dict:
                     "summary": summary_result["summary"],
                     "summary_length": summary_result["metadata"]["summary_length"]
                 })
-                # Bonus: Stream partial results
-                print(json.dumps({"chunk": i, "partial_summary": summary_result["summary"]}))
-                print(f"✓ Chunk {i} summarized: {len(chunk)} chars → {len(summary_result['summary'])} chars")
+                # Bonus: Stream partial results to terminal
+                print(json.dumps({"chunk": i, "total_chunks": len(chunks), "partial_summary": summary_result["summary"]}), flush=True)
+                print(f"✓ Chunk {i} summarized: {len(chunk)} chars → {len(summary_result['summary'])} chars", flush=True)
             except Exception as e:
-                print(f"✗ Error summarizing chunk {i}: {str(e)}")
+                print(f"✗ Error summarizing chunk {i}: {str(e)}", flush=True)
                 chunk_summaries.append({
                     "chunk_number": i,
                     "chunk_length": len(chunk),
@@ -361,21 +361,21 @@ def summarize_pdf(pdf_path: str) -> dict:
                 })
         
         # Step 6: Combine all chunk summaries into one final summary
-        print(f"\n{'='*80}")
-        print("CREATING COMBINED SUMMARY")
-        print(f"{'='*80}")
+        print(f"\n{'='*80}", flush=True)
+        print("CREATING COMBINED SUMMARY", flush=True)
+        print(f"{'='*80}", flush=True)
         
         all_summaries_text = "\n\n".join([f"Section {s['chunk_number']}: {s['summary']}" for s in chunk_summaries])
-        print(f"Combining {len(chunk_summaries)} chunk summaries...")
+        print(f"Combining {len(chunk_summaries)} chunk summaries...", flush=True)
         
         try:
             combined_summary_result = summarize_text(all_summaries_text, max_length="short")
             combined_summary = combined_summary_result["summary"]
-            # Bonus: Stream final result
-            print(json.dumps({"final_summary": combined_summary}))
-            print(f"✓ Combined summary created: {len(combined_summary)} characters")
+            # Bonus: Stream final result to terminal
+            print(json.dumps({"final_summary": combined_summary}), flush=True)
+            print(f"✓ Combined summary created: {len(combined_summary)} characters", flush=True)
         except Exception as e:
-            print(f"✗ Error creating combined summary: {str(e)}")
+            print(f"✗ Error creating combined summary: {str(e)}", flush=True)
             combined_summary = f"Error creating combined summary: {str(e)}"
         
         # Step 7: Prepare final output
@@ -397,9 +397,9 @@ def summarize_pdf(pdf_path: str) -> dict:
         with open(final_summary_file, 'w', encoding='utf-8') as f:
             json.dump(summarize_after_chunks, f, indent=2, ensure_ascii=False)
         
-        print(f"\n{'='*80}")
-        print(f"✓ Final summary saved to: {final_summary_file}")
-        print(f"{'='*80}")
+        print(f"\n{'='*80}", flush=True)
+        print(f"✓ Final summary saved to: {final_summary_file}", flush=True)
+        print(f"{'='*80}", flush=True)
         
         # Return result with file paths
         summarize_after_chunks["output_files"] = {
@@ -411,5 +411,3 @@ def summarize_pdf(pdf_path: str) -> dict:
         
     except Exception as e:
         raise Exception(f"Error in summarize_pdf: {str(e)}")
-
-
