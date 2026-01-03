@@ -64,7 +64,7 @@ Here is Video demo for Task3:
 
 
 Here is readme for task3:
-**[📖 Task 3 README](task3/TASK3_README.md)**
+**[📖 Task 3 README](code/task3/TASK3_README.md)**
 
 > **Environment Note**: Unlike Tasks 1 and 2 which were executed on WSL1, Task 3 requires a full Linux environment, Windows, or WSL2 for proper Playwright browser automation. This task uses a separate `task3_requirements.txt` and should be run in a new virtual environment.
 
