@@ -13,20 +13,17 @@ The system consists of several specialized agents:
 
 ## Technologies & Models Used
 
-- **Framework**: Google-adk (Agent Development Kit)
-- **LLM Models**:
-  - **Gemini 2.5 Flash** - Backend LLM used across all agents in Task1 for core processing
-  - **Gemini 2.5 Flash Lite** - Used in the `summarize_text` tool within the summarization agent
-  - **Gemini 3 Flash Preview** - Judge LLM used in the `hallucination_checker` tool within the evaluation agent
-- **Embedding Models**:
-  - **Sentence Transformers (all-MiniLM-L6-v2)** - Used for:
-    - Semantic chunking in the `summarize_pdf` tool (summarization agent)
-    - Semantic similarity calculation in the `evaluate_llm_responses` tool (evaluation agent)
-- **External APIs**:
-  - Weather API (for weather queries)
-  - Currency Exchange API (for exchange rate conversions)
-- **Document Processing**: PyMuPDF (fitz) for PDF text extraction
-- **Programming Language**: Python 3.x
+| Category | Technology/Model | Purpose/Usage |
+|----------|------------------|---------------|
+| **Framework** | Google-adk (Agent Development Kit) | Core framework for building and orchestrating agents |
+| **LLM Models** | Gemini 2.5 Flash | Backend LLM used across all agents in Task1 for core processing |
+| | Gemini 2.5 Flash Lite | Used in the `summarize_text` tool within the summarization agent |
+| | Gemini 3 Flash Preview | Judge LLM used in the `hallucination_checker` tool within the evaluation agent |
+| **Embedding Models** | Sentence Transformers (all-MiniLM-L6-v2) | - Semantic chunking in the `summarize_pdf` tool (summarization agent)<br>- Semantic similarity calculation in the `evaluate_llm_responses` tool (evaluation agent) |
+| **External APIs** | Weather API | For weather queries |
+| | Currency Exchange API | For exchange rate conversions |
+| **Document Processing** | PyMuPDF (fitz) | PDF text extraction |
+| **Programming Language** | Python 3.x | Primary development language |
 
 ## Key Features
 
@@ -77,8 +74,13 @@ The system consists of several specialized agents:
 
 ### Configuration
 1. Use the existing [`.env` file](../../.env)
+
+
 2. Go to [Google AI Studio](https://aistudio.google.com/) and create your Gemini API key
 ![Navigate to Google AI Studio](../../images/navigate_to_google_ai_studio.PNG)
+
+
+
 4. Add your Gemini API key to the `.env` file:
  ![Environment Setup](../../images/gemini_api_key_pasting_place.PNG)
 
