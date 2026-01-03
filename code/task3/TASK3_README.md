@@ -69,7 +69,7 @@ Task 3 implements an MCP-based system for automated web content extraction and s
 
 ## How to Run
 
-> **Environment Requirements**: Tasks 1 and 2 were executed on WSL1 due to limited Linux environment access. Task 3 requires a full Linux environment, Windows, or WSL2 for proper Playwright browser automation. This task was run on Windows using PowerShell terminal, which necessitated a separate `task3_requirements.txt` file. When running Task 3, create a new virtual environment to ensure proper dependency isolation. 
+> **Environment Requirements**: Tasks 1 and 2 were executed on WSL1 as I don't have Linux environment access. Task 3 requires a full Linux environment, Windows, or WSL2 for proper Playwright browser automation. This task was run on Windows using PowerShell terminal, which necessitated a separate `task3_requirements.txt` file. When running Task 3, create a new virtual environment to ensure proper dependency isolation. 
 
 1. Activate your virtual environment: `& venv\Scripts\Activate.ps1` (Windows)
 2. Install dependencies: `pip install -r task3_requirements.txt`
