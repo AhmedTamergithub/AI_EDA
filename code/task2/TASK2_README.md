@@ -54,7 +54,7 @@ The system is built around a central MCP Client that orchestrates requests acros
 
 1. Use the existing [`.env` file](../../.env)
 2. Go to [Google AI Studio](https://aistudio.google.com/) and create your Gemini API key
-3. ![Navigate to Google AI Studio](../../images/navigate_to_google_ai_studio.PNG)
+ ![Navigate to Google AI Studio](../../images/navigate_to_google_ai_studio.PNG)
 4. Add your Gemini API key to the `.env` file:
 
 
