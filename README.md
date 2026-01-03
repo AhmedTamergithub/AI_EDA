@@ -3,11 +3,12 @@
 ## Tasks Block Diagrams
 
 ### Task 1: Multi-Agent Orchestration
+**[🎥 Video Demo](https://drive.google.com/drive/folders/1uXNnznjzD2D28ZOuSagtw4vlr_1t7Arh?usp=sharing)**
 Here is readme for task1
 **[📖 Task 1 README](code/task1/TASK1_README.md)**
 
 
-
+----------------------------------------------------------------------
 
 ![Task 1 System Diagram](images/task1_system_diagram.png)
 
@@ -18,12 +19,13 @@ For Task 1, we developed a modular multi-agent system where each specific respon
 ---
 
 ### Task 2: MCP-Based Architecture
+**[🎥 Video Demo](https://drive.google.com/drive/folders/1k71ECXFs60-UV4GMh4_O5hjWCU7wob_E?usp=drive_link)**
 Here is readme for task2
 **[📖 Task 2 README](code/task2/TASK2_README.md)**
 
 
 
-
+----------------------------------------------------------------------
 
 
 ![Task 2 System Diagram](images/task2_system_diagram.png)
@@ -40,6 +42,7 @@ Task 2 transitions the system to a Model Context Protocol (MCP) architecture, en
 ---
 
 ### Task 3: Automated Web Extraction & Summarization
+**[🎥 Video Demo](https://drive.google.com/drive/folders/1JeiAw2mVzMdtRNwNHd4MqMbLqAJQLYAe?usp=drive_link)**
 Here is readme for task3
 **[📖 Task 3 README](task3/TASK3_README.md)**
 
