@@ -46,10 +46,6 @@ The system is built around a central MCP Client that orchestrates requests acros
 
 - **Decoupled Architecture**: Servers can be scaled or updated independently of the client.
 - **Standardized Protocol**: Uses MCP for consistent tool discovery and execution.
-- **Bonus: Streaming Support**:
-    - **Stderr Passthrough**: The MCP servers use `sys.stderr` to stream real-time progress and word-by-word summaries back to the client's terminal.
-    - **Real-time Feedback**: Users can see the summary being generated in real-time, even though the final tool result is returned as a complete JSON object.
-    - **Progress Tracking**: Detailed logs of PDF extraction, chunking, and individual chunk summarization are streamed to the terminal.
 
 ## How to Run Task 2
 
@@ -74,3 +70,10 @@ The system is built around a central MCP Client that orchestrates requests acros
 4. Run `adk web` in the terminal.
 5. From the ADK web UI, select "task2" from the drop-down menu.
 6. Start chatting with the MCP agent.
+
+## Bonus: Streaming Support
+
+- **Stderr Passthrough**: The MCP servers use `sys.stderr` to stream real-time progress and word-by-word summaries back to the client's terminal.
+- **Real-time Feedback**: Users can see the summary being generated in real-time, even though the final tool result is returned as a complete JSON object.
+- **Progress Tracking**: Detailed logs of PDF extraction, chunking, and individual chunk summarization are streamed to the terminal.
+- **Video Demo**: [Watch the streaming support in action](https://drive.google.com/file/d/1uWQyMYb_Hoj__g1fPLgf7OC-a7fF6KNG/view?usp=drive_link)

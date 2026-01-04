@@ -120,3 +120,15 @@ No schema was defined for the summarization agent
 
 
 **, so evaluation criteria for both sub-agents is different.**
+
+## Bonus: Real-Time Streaming Demonstration
+
+The system includes a specialized streaming implementation for the summarization workflow to enhance user experience during long-running PDF processing tasks.
+
+### Features:
+- **Chunk-by-Chunk Generation**: Summaries are "typed out" in the terminal in real-time using Gemini's streaming API (`generate_content_stream`).
+- **Live Progress Tracking**: Immediate feedback on PDF extraction, language detection, and semantic chunking steps using ` flush=True` in print statements.
+
+### Video Demonstration
+You can watch the real-time streaming in action here:
+[Watch the Streaming Demo Video](https://drive.google.com/file/d/1QqmaXMNB3ey4Z_NOdu6YbLHgeL_ilTlU/view?usp=sharing)
